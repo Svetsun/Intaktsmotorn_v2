@@ -165,8 +165,8 @@ ui <- fluidPage(
             ),
             column(3,
                    selectInput("tid_kons", "Konsult (namn)", choices = NULL),
-                   numericInput("tid_ar", "År", value = year(Sys.Date()), min = 2000, max = 2100),
-                   selectInput("tid_manad", "Månad", choices = setNames(1:12, month.name), selected = month(Sys.Date()))
+                   numericInput("tid_ar", "År", value = lubridate::year(Sys.Date()), min = 2000, max = 2100),
+                   selectInput("tid_manad", "Månad", choices = setNames(1:12, month.name), selected = lubridate::month(Sys.Date()))
             ),
             column(3, numericInput("tid_timmar", "Timmar denna månad", value = NA, min = 0)),
             column(3, br(), actionButton("btn_add_tid", "Lägg till tid", class = "btn-primary"))
@@ -185,10 +185,10 @@ ui <- fluidPage(
       fluidRow(
         column(
           3,
-          numericInput("irep_start_year",  "Start\u00e5r",    value = year(Sys.Date()), min = 2000, max = 2100),
-          selectInput( "irep_start_month", "Startm\u00e5nad", choices = setNames(1:12, month.name), selected = month(Sys.Date())),
-          numericInput("irep_end_year",    "Slut\u00e5r",     value = year(Sys.Date()), min = 2000, max = 2100),
-          selectInput( "irep_end_month",   "Slutm\u00e5nad",  choices = setNames(1:12, month.name), selected = month(Sys.Date()))
+          numericInput("irep_start_year",  "Start\u00e5r",    value = lubridate::year(Sys.Date()), min = 2000, max = 2100),
+          selectInput( "irep_start_month", "Startm\u00e5nad", choices = setNames(1:12, month.name), selected = lubridate::month(Sys.Date())),
+          numericInput("irep_end_year",    "Slut\u00e5r",     value = lubridate::year(Sys.Date()), min = 2000, max = 2100),
+          selectInput( "irep_end_month",   "Slutm\u00e5nad",  choices = setNames(1:12, month.name), selected = lubridate::month(Sys.Date()))
         ),
         column(
           3,

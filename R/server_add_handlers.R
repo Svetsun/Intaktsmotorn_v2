@@ -504,6 +504,6 @@ register_add_handlers <- function(input, session, rv,
     if (!isTRUE(persist_after_add(c("Tidrapportering")))) return()
     
     reset_form(session, ids = c("tid_kons","tid_upp","tid_task","tid_ar","tid_manad","tid_timmar"),
-               defaults = list(tid_ar = year(Sys.Date()), tid_manad = month(Sys.Date())))
+               defaults = list(tid_ar = lubridate::year(Sys.Date()), tid_manad = lubridate::month(Sys.Date())))
   })
 }

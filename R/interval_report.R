@@ -89,7 +89,7 @@ resolve_grundlon_for_month <- function(grundlon_history, konsulter_df,
     gl$consultant_id <- as.character(gl$consultant_id)
     gl$grundlon      <- suppressWarnings(as.numeric(gl$grundlon))
     gl$active_year   <- ifelse(
-      month(gl$created_at) == 1,
+      lubridate::month(gl$created_at) == 1,
       as.integer(format(gl$created_at, "%Y")),
       as.integer(format(gl$created_at, "%Y")) + 1L
     )
