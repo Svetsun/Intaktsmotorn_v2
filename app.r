@@ -1,33 +1,21 @@
+source("renv/activate.R")
 
 ###############################################
 # app.R — Förenklad Excel-struktur
-#
-# Behåller:
-# - Per-flik spar + global "Spara Alla" med backup
-# - Uppgift-formulär (kund -> uppdrag filtreras) + uppgift_name
-# - Tidrapportering: kund -> uppdrag -> uppgift (dropdown) + uppgift_name visas i tabell
-# - Rapport-flik + export
-# - Historik read-only med namn
-#
-# NYTT (DENNA VERSION):
-# - Kund-flik: val av Fakturamottagare typ (Kund/Mäklare)
-#   -> skapar FM-rad automatiskt vid "Lägg till kund"
-###############################################
 
 rm(list = ls())
 graphics.off()
 cat("\014")
 
-suppressPackageStartupMessages({
-  library(shiny)
-  library(readxl)
-  library(writexl)
-  library(janitor)
-  library(dplyr)
-  library(lubridate)
-  library(stringr)
-  library(rhandsontable)
-})
+
+library(shiny)
+library(readxl)
+library(writexl)
+library(janitor)
+library(dplyr)
+library(lubridate)
+library(stringr)
+library(rhandsontable)
 
 # ===================== KONFIG =====================
 
