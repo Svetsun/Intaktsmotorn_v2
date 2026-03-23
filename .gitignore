@@ -1,0 +1,36 @@
+library/
+local/
+cellar/
+lock/
+python/
+sandbox/
+staging/
+
+# Existing renv ignores
+library/
+local/
+cellar/
+lock/
+python/
+sandbox/
+staging/
+
+# R / VS Code
+.Rhistory
+.RData
+.Rproj.user/
+.vscode/
+
+# Output and temp files
+output/
+*.tmp
+*.bak
+
+# Excel runtime data and backups
+data/Base_data.xlsx
+data/*backup*.xlsx
+*backup*.xlsx
+
+# OS files
+.DS_Store
+Thumbs.db
