@@ -39,7 +39,7 @@ ui <- fluidPage(
           tags$hr(),
           fluidRow(column(8, offset = 8, actionButton("btn_save_konsulter", "Spara ändringar i konsulter", class = "btn-success"))),
           h4("Redigera befintliga konsulter"),
-          rHandsontableOutput("hot_konsulter")
+          rhandsontable::rHandsontableOutput("hot_konsulter")
         ),
         
         tabPanel(
@@ -53,7 +53,7 @@ ui <- fluidPage(
           tags$hr(),
           fluidRow(column(8, offset = 8, actionButton("btn_save_maklare", "Spara ändringar", class = "btn-success"))),
           h4("Redigera mäklare"),
-          rHandsontableOutput("hot_maklare")
+          rhandsontable::rHandsontableOutput("hot_maklare")
         ),
         
         # ===================== KUNDER (NY LOGIK) =====================
@@ -88,7 +88,7 @@ ui <- fluidPage(
           tags$hr(),
           fluidRow(column(8, offset = 8, actionButton("btn_save_kunder", "Spara ändringar", class = "btn-success"))),
           h4("Redigera kunder"),
-          rHandsontableOutput("hot_kunder")
+          rhandsontable::rHandsontableOutput("hot_kunder")
         ),
         
         tabPanel(
@@ -114,7 +114,7 @@ ui <- fluidPage(
           tags$hr(),
           fluidRow(column(8, offset = 8, actionButton("btn_save_fm", "Spara ändringar", class = "btn-success"))),
           h4("Redigera fakturamottagare"),
-          rHandsontableOutput("hot_fm")
+          rhandsontable::rHandsontableOutput("hot_fm")
         ),
         
         tabPanel(
@@ -128,7 +128,7 @@ ui <- fluidPage(
           tags$hr(),
           fluidRow(column(8, offset = 8, actionButton("btn_save_uppdrag", "Spara ändringar", class = "btn-success"))),
           h4("Redigera uppdrag (customer_name visas read-only)"),
-          rHandsontableOutput("hot_uppdrag")
+          rhandsontable::rHandsontableOutput("hot_uppdrag")
         ),
         
         tabPanel(
@@ -151,7 +151,7 @@ ui <- fluidPage(
           tags$hr(),
           fluidRow(column(8, offset = 8, actionButton("btn_save_uppgift", "Spara ändringar", class = "btn-success"))),
           h4("Redigera uppgift (namn/uppdrag/kund visas read-only)"),
-          rHandsontableOutput("hot_uppgift")
+          rhandsontable::rHandsontableOutput("hot_uppgift")
         ),
         
         tabPanel(
@@ -174,7 +174,7 @@ ui <- fluidPage(
           tags$hr(),
           fluidRow(column(8, offset = 8, actionButton("btn_save_tid", "Spara ändringar", class = "btn-success"))),
           h4("Redigera tidrapportering (namn/uppdrag/kund/uppgift visas read-only)"),
-          rHandsontableOutput("hot_tid")
+          rhandsontable::rHandsontableOutput("hot_tid")
         )
       )
     ),
@@ -209,17 +209,17 @@ ui <- fluidPage(
       uiOutput("irep_monthly_sections"),
       tags$hr(),
       h4("Totalt f\u00f6r hela intervallet"),
-      rHandsontableOutput("hot_irep_totals")
+      rhandsontable::rHandsontableOutput("hot_irep_totals")
     ),
 
     tabPanel(
       "Historik (read-only)",
       tabsetPanel(
-        tabPanel("GrundlonHistory", rHandsontableOutput("hot_gl_hist")),
-        tabPanel("TimprisHistory", rHandsontableOutput("hot_tp_hist")),
-        tabPanel("BonusHistory", rHandsontableOutput("hot_bo_hist")),
-        tabPanel("GroupBonusHistory", rHandsontableOutput("hot_gb_hist")),
-        tabPanel("SalesBonusHistory", rHandsontableOutput("hot_sb_hist"))
+        tabPanel("GrundlonHistory", rhandsontable::rHandsontableOutput("hot_gl_hist")),
+        tabPanel("TimprisHistory", rhandsontable::rHandsontableOutput("hot_tp_hist")),
+        tabPanel("BonusHistory", rhandsontable::rHandsontableOutput("hot_bo_hist")),
+        tabPanel("GroupBonusHistory", rhandsontable::rHandsontableOutput("hot_gb_hist")),
+        tabPanel("SalesBonusHistory", rhandsontable::rHandsontableOutput("hot_sb_hist"))
       )
     )
   )

@@ -184,7 +184,7 @@ server <- function(input, output, session) {
   #NY!!!
   # ===================== HOT OUTPUTS =====================
   
-  output$hot_konsulter <- renderRHandsontable({
+  output$hot_konsulter <- rhandsontable::renderRHandsontable({
     req(rv$wb)
     df <- sanitize_nulls_df(rv$wb[["Konsulter"]]) |> coerce_dates(c("startdatum", "slutdatum"))
     for (bc in c("bonus_grund", "group_bonus", "sales_bonus")) {
@@ -195,24 +195,24 @@ server <- function(input, output, session) {
     hot_with_date_cols(df, c("startdatum", "slutdatum"))
   })
   
-  output$hot_maklare <- renderRHandsontable({
+  output$hot_maklare <- rhandsontable::renderRHandsontable({
     req(rv$wb)
     df <- ensure_cols(rv$wb[["Maklare"]], c("maklare_id","maklare_namn","kontakt_fornamn","kontakt_efternamn","email","kommentar","created_at"))
     hot_with_date_cols(df, c("created_at"))
   })
   
-  output$hot_kunder <- renderRHandsontable({
+  output$hot_kunder <- rhandsontable::renderRHandsontable({
     req(rv$wb)
     df <- ensure_cols(rv$wb[["Kunder"]], c("customer_id","customer_namn","kontakt_fornamn","kontakt_efternamn","email","created_at"))
     hot_with_date_cols(df, c("created_at"))
   })
   
-  output$hot_fm <- renderRHandsontable({
+  output$hot_fm <- rhandsontable::renderRHandsontable({
     req(rv$wb)
-    rhandsontable(sanitize_nulls_df(rv$wb[["FaktureringInformation"]]), stretchH = "all")
+    rhandsontable::rhandsontable(sanitize_nulls_df(rv$wb[["FaktureringInformation"]]), stretchH = "all")
   })
   #NY!!!
-  output$hot_uppdrag <- renderRHandsontable({
+  output$hot_uppdrag <- rhandsontable::renderRHandsontable({
     req(rv$wb, rv$labels)
     
     df <- sanitize_nulls_df(rv$wb[["Uppdrag"]]) |>
@@ -228,13 +228,13 @@ server <- function(input, output, session) {
     
     # Read-only på visningskolumner
     for (nm in intersect(c("customer_name", "faktura_mottagare_typ"), names(df))) {
-      h <- hot_col(h, nm, readOnly = TRUE)
+      h <- rhandsontable::hot_col(h, nm, readOnly = TRUE)
     }
     
     h
   })
   #NY!!!
-  output$hot_uppgift <- renderRHandsontable({
+  output$hot_uppgift <- rhandsontable::renderRHandsontable({
     req(rv$wb, rv$labels)
     df <- sanitize_nulls_df(rv$wb[["Uppgift"]]) |>
       ensure_uppgift_timpris() |>
@@ -253,11 +253,11 @@ server <- function(input, output, session) {
     for (col in c("consultant_id","uppdrag_id","customer_id")) if (col %in% names(df)) df[[col]] <- NULL
     
     h <- hot_with_date_cols(df, c("startdatum","slutdatum","created_at"))
-    for (nm in intersect(c("consultant_name","uppdrag_label","customer_name","created_at"), names(df))) h <- hot_col(h, nm, readOnly = TRUE)
+    for (nm in intersect(c("consultant_name","uppdrag_label","customer_name","created_at"), names(df))) h <- rhandsontable::hot_col(h, nm, readOnly = TRUE)
     h
   })
   
-  output$hot_tid <- renderRHandsontable({
+  output$hot_tid <- rhandsontable::renderRHandsontable({
     req(rv$wb, rv$labels)
     df <- sanitize_nulls_df(rv$wb[["Tidrapportering"]]) |>
       coerce_dates(c("startdatum","slutdatum","created_at")) |>
@@ -274,7 +274,7 @@ server <- function(input, output, session) {
     for (cc in c("consultant_id","uppdrag_id","customer_id")) if (cc %in% names(df)) df[[cc]] <- NULL
     
     h <- hot_with_date_cols(df, c("startdatum","slutdatum","created_at"))
-    for (nm in intersect(c("consultant_name","uppdrag_label","customer_name","uppgift_name","created_at"), names(df))) h <- hot_col(h, nm, readOnly = TRUE)
+    for (nm in intersect(c("consultant_name","uppdrag_label","customer_name","uppgift_name","created_at"), names(df))) h <- rhandsontable::hot_col(h, nm, readOnly = TRUE)
     h
   })
   
@@ -308,19 +308,19 @@ server <- function(input, output, session) {
     for (mk in month_keys) {
       local({
         .mk <- mk
-        output[[paste0("hot_irep_d_", .mk)]] <- renderRHandsontable({
+        output[[paste0("hot_irep_d_", .mk)]] <- rhandsontable::renderRHandsontable({
           req(rv$interval_report)
           df <- rv$interval_report$detail
           df_m <- df[sprintf("%04d%02d", df$ar, df$manad) == .mk, ,drop=FALSE]
           df_m <- df_m[, !names(df_m) %in% c("ar","manad"), drop=FALSE]
-          rhandsontable(df_m, stretchH = "all", readOnly = TRUE)
+          rhandsontable::rhandsontable(df_m, stretchH = "all", readOnly = TRUE)
         })
-        output[[paste0("hot_irep_s_", .mk)]] <- renderRHandsontable({
+        output[[paste0("hot_irep_s_", .mk)]] <- rhandsontable::renderRHandsontable({
           req(rv$interval_report)
           df <- rv$interval_report$summary
           df_m <- df[sprintf("%04d%02d", df$ar, df$manad) == .mk, ,drop=FALSE]
           df_m <- df_m[, !names(df_m) %in% c("ar","manad"), drop=FALSE]
-          rhandsontable(df_m, stretchH = "all", readOnly = TRUE)
+          rhandsontable::rhandsontable(df_m, stretchH = "all", readOnly = TRUE)
         })
       })
     }
@@ -347,16 +347,16 @@ server <- function(input, output, session) {
         h4(lbl),
         tags$p(tags$strong(arb_txt)),
         h5("Detalj (konsult \u2022 kund \u2022 uppdrag)"),
-        rHandsontableOutput(paste0("hot_irep_d_", mk)),
+        rhandsontable::rHandsontableOutput(paste0("hot_irep_d_", mk)),
         h5("Sammanfattning per konsult"),
-        rHandsontableOutput(paste0("hot_irep_s_", mk))
+        rhandsontable::rHandsontableOutput(paste0("hot_irep_s_", mk))
       )
     })
     do.call(tagList, sections)
   })
-  output$hot_irep_totals  <- renderRHandsontable({
+  output$hot_irep_totals  <- rhandsontable::renderRHandsontable({
     req(rv$interval_report)
-    rhandsontable(rv$interval_report$totals,  stretchH = "all", readOnly = TRUE)
+    rhandsontable::rhandsontable(rv$interval_report$totals,  stretchH = "all", readOnly = TRUE)
   })
 
   output$download_interval_report <- downloadHandler(
@@ -383,11 +383,11 @@ server <- function(input, output, session) {
     t[, c(front, setdiff(names(t), front)), drop = FALSE]
   }
   
-  output$hot_gl_hist <- renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["GrundlonHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
-  output$hot_tp_hist <- renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["TimprisHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
-  output$hot_bo_hist <- renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["BonusHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
-  output$hot_gb_hist <- renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["GroupBonusHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
-  output$hot_sb_hist <- renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["SalesBonusHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
+  output$hot_gl_hist <- rhandsontable::renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["GrundlonHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
+  output$hot_tp_hist <- rhandsontable::renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["TimprisHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
+  output$hot_bo_hist <- rhandsontable::renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["BonusHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
+  output$hot_gb_hist <- rhandsontable::renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["GroupBonusHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
+  output$hot_sb_hist <- rhandsontable::renderRHandsontable({ req(rv$wb, rv$labels); hot_with_date_cols(hist_view_with_names(rv$wb[["SalesBonusHistory"]], rv$labels) |> coerce_dates(c("created_at")), c("created_at"), read_only = TRUE) })
   
   # ===================== COMMIT från UI =====================
   
@@ -399,7 +399,7 @@ server <- function(input, output, session) {
       )
       return(invisible(FALSE))
     }
-    new <- hot_to_r(hot_input) |> sanitize_nulls_df()
+    new <- rhandsontable::hot_to_r(hot_input) |> sanitize_nulls_df()
     if (!is.null(date_cols)) new <- coerce_dates(new, date_cols)
     if (is.function(postprocess)) new <- postprocess(new)
     rv$wb[[sheet_name]] <- new

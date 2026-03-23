@@ -7,10 +7,10 @@ hot_with_date_cols <- function(df,
     df2[[dc]] <- ifelse(is.na(d), NA_character_, format(d, "%Y-%m-%d"))
   }
 
-  h <- rhandsontable(df2, stretchH = "all", readOnly = read_only)
+  h <- rhandsontable::rhandsontable(df2, stretchH = "all", readOnly = read_only)
 
   for (dc in intersect(date_cols, names(df2))) {
-    h <- hot_col(h, dc, type = "date", dateFormat = "YYYY-MM-DD", correctFormat = TRUE)
+    h <- rhandsontable::hot_col(h, dc, type = "date", dateFormat = "YYYY-MM-DD", correctFormat = TRUE)
   }
   h
 }
