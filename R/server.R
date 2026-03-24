@@ -311,16 +311,14 @@ server <- function(input, output, session) {
         output[[paste0("hot_irep_d_", .mk)]] <- rhandsontable::renderRHandsontable({
           req(rv$interval_report)
           df <- rv$interval_report$detail
-          df_m <- df[sprintf("%04d%02d", df$ar, df$manad) == .mk, ,drop=FALSE]
-          df_m <- df_m[, !names(df_m) %in% c("ar","manad"), drop=FALSE]
-          rhandsontable::rhandsontable(df_m, stretchH = "all", readOnly = TRUE)
+          df_m <- df[format(as.Date(df$period_date), "%Y%m") == .mk, , drop = FALSE]
+          hot_with_date_cols(df_m, "period_date", read_only = TRUE)
         })
         output[[paste0("hot_irep_s_", .mk)]] <- rhandsontable::renderRHandsontable({
           req(rv$interval_report)
           df <- rv$interval_report$summary
-          df_m <- df[sprintf("%04d%02d", df$ar, df$manad) == .mk, ,drop=FALSE]
-          df_m <- df_m[, !names(df_m) %in% c("ar","manad"), drop=FALSE]
-          rhandsontable::rhandsontable(df_m, stretchH = "all", readOnly = TRUE)
+          df_m <- df[format(as.Date(df$period_date), "%Y%m") == .mk, , drop = FALSE]
+          hot_with_date_cols(df_m, "period_date", read_only = TRUE)
         })
       })
     }

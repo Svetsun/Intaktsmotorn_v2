@@ -200,7 +200,7 @@ ui <- fluidPage(
         column(6, helpText(
           "Rapporten t\u00e4cker ett intervall av m\u00e5nader.",
           "Tidrapporteringsrader inkluderas om perioden \u00f6verlappar valt intervall.",
-          "Timpris\u00e4ndringar i historiken aktiveras fr\u00e5n n\u00e4sta m\u00e5nads start.",
+          "Timpris\u00e4ndringar i historiken aktiveras fr\u00e5n samma m\u00e5nads start.",
           "Grundl\u00f6ns\u00e4ndringar aktiveras fr\u00e5n 1 jan n\u00e4sta \u00e5r.",
           "Bonustr\u00f6skel till\u00e4mpas per m\u00e5nad."
         ))

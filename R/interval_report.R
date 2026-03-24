@@ -111,7 +111,8 @@ resolve_grundlon_for_month <- function(grundlon_history, konsulter_df,
 }
 
 # Returns the bonus_grund (%) to use for a consultant in the month at target_first_day.
-# Rule: same activation as timpris — change in month X is active from month X+1.
+# Rule: a BonusHistory change recorded in month X becomes active from the first day of month X+1.
+#       → keep rows where created_at is strictly before first day of target month.
 # Fallback: current Konsulter$bonus_grund, or 0 if missing.
 resolve_bonus_for_month <- function(bonus_history, konsulter_df,
                                      consultant_id, target_first_day) {
@@ -161,7 +162,7 @@ build_interval_report <- function(wb, labels,
   make_empty <- function() {
     list(
       detail = data.frame(
-        ar = integer(0), manad = integer(0),
+        period_date = as.Date(character(0)),
         fornamn = character(0), efternamn = character(0),
         kundnamn = character(0), uppdrag_label = character(0),
         timmar = numeric(0), timpris_used = numeric(0),
@@ -169,7 +170,7 @@ build_interval_report <- function(wb, labels,
         stringsAsFactors = FALSE
       ),
       summary = data.frame(
-        ar = integer(0), manad = integer(0),
+        period_date = as.Date(character(0)),
         fornamn = character(0), efternamn = character(0),
         total_debiterad = numeric(0),
         grundlon_used = numeric(0), bonus_percent_used = numeric(0),
@@ -181,7 +182,7 @@ build_interval_report <- function(wb, labels,
         fornamn = character(0), efternamn = character(0),
         total_debiterad = numeric(0),
         grundlon_total = numeric(0), bonus_belopp_total = numeric(0),
-        lon_total = numeric(0), debiteringsgrad = numeric(0),
+        lon_total = numeric(0),
         stringsAsFactors = FALSE
       ),
       arb_hours_by_month = list()
@@ -297,8 +298,8 @@ build_interval_report <- function(wb, labels,
 
     # Detail: group by consultant + customer + uppdrag
     detail_m <- tid_m_named |>
-      mutate(ar = y, manad = m) |>
-      group_by(ar, manad, fornamn, efternamn, kundnamn, uppdrag_label) |>
+      mutate(period_date = fd) |>
+      group_by(period_date, fornamn, efternamn, kundnamn, uppdrag_label) |>
       summarise(
         timmar      = sum(timmar,      na.rm = TRUE),
         total_summa = sum(total_summa, na.rm = TRUE),
@@ -312,7 +313,7 @@ build_interval_report <- function(wb, labels,
           NA_real_
         )
       ) |>
-      select(ar, manad, fornamn, efternamn, kundnamn, uppdrag_label,
+      select(period_date, fornamn, efternamn, kundnamn, uppdrag_label,
              timmar, timpris_used, total_summa, debiteringsgrad) |>
       arrange(fornamn, efternamn, kundnamn, uppdrag_label)
 
@@ -331,7 +332,7 @@ build_interval_report <- function(wb, labels,
 
     # Summary: group by consultant for this month
     summary_m <- detail_m |>
-      group_by(ar, manad, fornamn, efternamn) |>
+      group_by(period_date, fornamn, efternamn) |>
       summarise(
         total_debiterad = sum(total_summa,    na.rm = TRUE),
         debiteringsgrad = round(sum(debiteringsgrad, na.rm = TRUE), 2),
@@ -350,7 +351,7 @@ build_interval_report <- function(wb, labels,
                                     0),
         lon_total          = grundlon_used + bonus_belopp
       ) |>
-      select(ar, manad, fornamn, efternamn, total_debiterad,
+      select(period_date, fornamn, efternamn, total_debiterad,
              grundlon_used, bonus_percent_used, bonus_belopp, lon_total, debiteringsgrad) |>
       arrange(fornamn, efternamn)
 
@@ -366,7 +367,8 @@ build_interval_report <- function(wb, labels,
   detail_all  <- bind_rows(monthly_detail)
   summary_all <- bind_rows(monthly_summary)
 
-  # Interval totals: one row per consultant, summed across all months
+  # Interval totals: one row per consultant, summed across all months.
+  # debiteringsgrad is intentionally excluded — summing a ratio across months is meaningless.
   totals <- summary_all |>
     group_by(fornamn, efternamn) |>
     summarise(
@@ -374,7 +376,6 @@ build_interval_report <- function(wb, labels,
       grundlon_total     = sum(grundlon_used,    na.rm = TRUE),
       bonus_belopp_total = sum(bonus_belopp,     na.rm = TRUE),
       lon_total          = sum(lon_total,        na.rm = TRUE),
-      debiteringsgrad    = round(sum(debiteringsgrad, na.rm = TRUE), 2),
       .groups = "drop"
     ) |>
     arrange(fornamn, efternamn)
