@@ -26,10 +26,7 @@ output/
 *.tmp
 *.bak
 
-# Excel runtime data and backups
-data/Base_data.xlsx
-data/*backup*.xlsx
-*backup*.xlsx
+
 
 # OS files
 .DS_Store
